@@ -6,6 +6,7 @@ import Promise from "bluebird";
 import codeCoverageTask from "@cypress/code-coverage/task";
 import { defineConfig } from "cypress";
 import viteConfig from "./vite.cypress.config.ts";
+import eyesPlugin from "@applitools/eyes-cypress";
 
 dotenv.config({ path: ".env.local" });
 dotenv.config();
@@ -18,7 +19,8 @@ try {
   awsConfig = require(path.join(__dirname, "./aws-exports-es5.js"));
 } catch (e) {}
 
-export default defineConfig({
+export default eyesPlugin(
+  defineConfig({
   projectId: "7s5okt",
   retries: {
     runMode: 2,
@@ -146,5 +148,6 @@ export default defineConfig({
 
       return config;
     },
-  },
-});
+   },
+})
+);

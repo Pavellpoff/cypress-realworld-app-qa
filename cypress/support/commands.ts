@@ -404,3 +404,21 @@ Cypress.Commands.add("loginByGoogleApi", () => {
     }
   );
 });
+
+
+
+ //Моя команда login
+Cypress.Commands.add('loginpavel', (username, password) => {
+  cy.intercept('POST', '/login').as('login')
+
+  cy.visit('/signin')
+
+  cy.get('[name="username"]').type(username)
+  cy.get('[name="password"]').type(password)
+
+  cy.get('[data-test="signin-submit"]').click()
+
+  cy.wait('@login')
+    .its('response.statusCode')
+    .should('eq', 200)
+});

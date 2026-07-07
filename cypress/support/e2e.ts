@@ -1,4 +1,6 @@
 // @ts-check
+// @ts-check
+import '@applitools/eyes-cypress/commands'
 import "@cypress/code-coverage/support";
 import "./commands";
 import { isMobile } from "./utils";
