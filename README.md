@@ -1,3 +1,11 @@
+## Примечание
+
+В качестве тестируемого приложения используется проект Cypress Real World App.
+
+Мной были разработаны UI- и API-автотесты, а также подготовлена сопутствующая тестовая документация в рамках QA-портфолио.
+
+
+
 <p align="center">
   <!-- We use two SVGs here so that this displays correctly
     on Github. This might not look right in other Markdown previewers. -->
