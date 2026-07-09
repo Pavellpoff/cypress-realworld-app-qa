@@ -1,0 +1,23 @@
+name: Cypress Tests with Code Coverage
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+
+  pull_request:
+
+jobs:
+  cypress-run:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Run Cypress with coverage
+        run: yarn cypress:run --env coverage=true
