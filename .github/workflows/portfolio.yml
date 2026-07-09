@@ -17,23 +17,20 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: yarn
+
       - name: Install dependencies
-        run: yarn install
-
-      - name: Start application
-        run: |
-          yarn dev:coverage &
-
-      - name: Wait for frontend
-        run: npx wait-on http://localhost:3000 --timeout 180000
-
-      - name: Wait for backend
-        run: npx wait-on http://localhost:3001 --timeout 180000
-
-      - name: Test seed endpoint
-        run: |
-          curl -X POST http://localhost:3001/testData/seed
+        run: yarn install --frozen-lockfile
 
       - name: Run Cypress tests
-        run: yarn cypress:run
+        uses: cypress-io/github-action@v6
+        with:
+          start: yarn dev:coverage
+          wait-on: "http://localhost:3000,http://localhost:3001"
+          wait-on-timeout: 180
+          command: yarn cypress:run
 
