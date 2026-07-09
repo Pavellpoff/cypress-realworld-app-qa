@@ -19,5 +19,10 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
-      - name: Run Cypress with coverage
-        run: yarn cypress:run --env coverage=true
+      - name: Run Cypress
+        uses: cypress-io/github-action@v6
+        with:
+          start: yarn dev:coverage
+          wait-on: "http://localhost:3000"
+          wait-on-timeout: 180
+          command: yarn cypress:run
