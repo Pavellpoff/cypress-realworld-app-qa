@@ -20,11 +20,20 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
+      - name: Start application
+        run: |
+          yarn dev:coverage &
+
+      - name: Wait for frontend
+        run: npx wait-on http://localhost:3000 --timeout 180000
+
+      - name: Wait for backend
+        run: npx wait-on http://localhost:3001 --timeout 180000
+
+      - name: Test seed endpoint
+        run: |
+          curl -X POST http://localhost:3001/testData/seed
+
       - name: Run Cypress tests
-        uses: cypress-io/github-action@v6
-        with:
-          start: yarn start:coverage
-          wait-on: "http://localhost:3000"
-          wait-on-timeout: 180
-          command: yarn cypress:run
+        run: yarn cypress:run
 
