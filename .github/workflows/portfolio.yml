@@ -1,0 +1,29 @@
+name: Portfolio QA Tests
+
+on:
+  push:
+    branches:
+      - develop
+
+  pull_request:
+    branches:
+      - develop
+
+jobs:
+  portfolio-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Run Cypress tests
+        uses: cypress-io/github-action@v6
+        with:
+          start: yarn dev:coverage
+          wait-on: "http://localhost:3000"
+          wait-on-timeout: 180
+          command: yarn cypress:run
