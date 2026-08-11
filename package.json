@@ -166,7 +166,7 @@
     "cypress:open": "cypress open",
     "cypress:open:mobile": "cypress open --config '{\"e2e\":{\"viewportWidth\":375,\"viewportHeight\":667}}'",
     "cypress:run": "cypress run",
-    "report:merge": "mochawesome-merge cypress/results/*.json -o mochawesome.json",
+    "report:merge": "mochawesome-merge cypress/results/*.json -o cypress/results/merged-mochawesome.json",
     "report:generate": "marge mochawesome.json",
     "cypress:run:component": "cypress run --component",
     "cypress:run:mobile": "cypress run --config '{\"e2e\":{\"viewportWidth\":375,\"viewportHeight\":667}}'",
