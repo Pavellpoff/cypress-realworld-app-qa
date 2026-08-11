@@ -107,13 +107,18 @@ jobs:
       - name: Merge Mochawesome reports
         if: always()
         run: yarn report:merge
+
+      - name: Clean previous HTML report
+        if: always()
+        run: rm -rf mochawesome-report
+
       - name: Generate HTML report
         if: always()
         run: yarn report:generate
 
       - name: Upload Cypress HTML report
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: Cypress HTML Report
           path: mochawesome-report/
