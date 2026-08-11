@@ -22,6 +22,18 @@ try {
 export default eyesPlugin(
   defineConfig({
   projectId: "7s5okt",
+
+
+reporter: "mochawesome",
+
+reporterOptions: {
+  reportDir: "cypress/results",
+  overwrite: false,
+  html: false,
+  json: true,
+},
+
+
   retries: {
     runMode: 2,
   },

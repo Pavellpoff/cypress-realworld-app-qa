@@ -29,6 +29,8 @@ jobs:
         run: yarn install --frozen-lockfile
 
       - name: Run Cypress tests
+        id: cypress
+        continue-on-error: true
         uses: cypress-io/github-action@v7
         with:
           start: yarn dev:coverage
@@ -36,3 +38,71 @@ jobs:
           wait-on-timeout: 180
           command: yarn cypress:run
 
+      - name: Generate test summary
+        if: always()
+        run: |
+          node <<'EOF'
+          const fs = require('fs');
+          const path = require('path');
+
+          const resultsDir = 'cypress/results';
+
+          let total = 0;
+          let passed = 0;
+          let failed = 0;
+          let pending = 0;
+          let skipped = 0;
+
+          if (fs.existsSync(resultsDir)) {
+            const files = fs
+              .readdirSync(resultsDir)
+              .filter(file => file.endsWith('.json'));
+
+            for (const file of files) {
+              const filePath = path.join(resultsDir, file);
+
+              try {
+                const report = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+
+                if (report.stats) {
+                  total += report.stats.tests || 0;
+                  passed += report.stats.passes || 0;
+                  failed += report.stats.failures || 0;
+                  pending += report.stats.pending || 0;
+                  skipped += report.stats.skipped || 0;
+                }
+              } catch (error) {
+                console.log(`Could not parse ${file}: ${error.message}`);
+              }
+            }
+          }
+
+          const passRate = total > 0
+            ? ((passed / total) * 100).toFixed(1)
+            : '0.0';
+
+          const summary = `
+          ## Cypress Test Summary
+
+          | Metric | Result |
+          |---|---:|
+          | **Total tests** | **${total}** |
+          | **Passed** | **${passed}** |
+          | **Failed** | **${failed}** |
+          | **Pending** | **${pending}** |
+          | **Skipped** | **${skipped}** |
+          | **Pass rate** | **${passRate}%** |
+
+          ### Test execution
+
+          Cypress automated tests were executed in GitHub Actions.
+
+          **Result:** ${failed === 0 ? '✅ All tests passed' : '❌ Some tests failed'}
+          `;
+
+          fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, summary);
+          EOF
+
+      - name: Fail workflow if Cypress tests failed
+        if: steps.cypress.outcome == 'failure'
+        run: exit 1
